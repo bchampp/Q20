@@ -194,21 +194,47 @@ resistor is marked by a white rectangle.
 \end{center}
 
 \section{ECU Documentation}
-Attached to the end of this document is an excerpt from the ECU datasheet which
+Attached below is an excerpt from the ECU datasheet which
 gives a list of the CAN IDs and the contents of the data section of those
 messages. This document should always be used as a reference when determining
 priority of existing messages being sent over the bus and when selecting CAN IDs
 for new messages.\\
 
-TODO:
-\begin{itemize}
-  \item Document CAN library and retrieving ECU messages using the testbench.
-\end{itemize}
-
 \includepdf[page = {1,2}]{PE3-ECU-CAN-Protocols}
 
 \subsection{ECU Arduino Library}
+% Update this when the library covers all CAN messages sent by the PE3 ECU
 QFSAE is developing a library to read these ECU message built atop the
-CAN shield library.
+CAN shield library. Currently, the library can read all the messages on page 1
+of the datasheet provided above. The library exposes an \lstinline{ECU} class
+which has global variables containing each of the values transmitted by
+the ECU in CAN message IDs PE1 - PE7. The values are kept up to date with the
+latest ECU message transmission by passing the data in each CAN message from the
+ECU into the object's \lstinline{update()} method. The class definition for the
+ECU object is given below followed by the code for an ECU testbench.\\
+
+\lstset{basicstyle=\ttfamily\scriptsize}
+\lstinputlisting[language=C++, title=ECU Testbench]{../QCAN/QCAN.ino}
+\ltset{basicstyle=\ttfamily}
+
+The code assumes that an Arduino and CAN shield are connected to the same CAN
+bus as the ECU. Using the CAN shield library, messages are received and passed
+into the \lstinline{update()} function along with their ID. This updates the
+appropriate variables with their new values given in the message. The call to
+\lstinline{debugPrint()} uses the ID to determine which values received an
+update from the ECU and prints them to the serial monitor.
+
+\section{CAN Interrupts}
+There are many cases on the Formula car where CAN messages need to be sent
+between devices on the car based on an event such as a gear shift or throttle
+position threshold. Since CAN is a priority bus where the lower addresses have
+higher priority, a low address should be used for interrupt based messages since
+they are only fired once for a certain event taking place and must be able to
+overtake lower priority messages that will simply be sent again such as an RPM
+update. Given below is some example code which emulates the up and down shift
+CAN functionality on the car. 
+
+\lstset{basicstyle=\ttfamily\scriptsize}
+% add CAN interrupt code here
 
 \end{document}
