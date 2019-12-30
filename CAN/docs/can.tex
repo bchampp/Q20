@@ -215,7 +215,7 @@ ECU object is given below followed by the code for an ECU testbench.\\
 
 \lstset{basicstyle=\ttfamily\scriptsize}
 \lstinputlisting[language=C++, title=ECU Testbench]{../QCAN/QCAN.ino}
-\ltset{basicstyle=\ttfamily}
+\lstset{basicstyle=\ttfamily}
 
 The code assumes that an Arduino and CAN shield are connected to the same CAN
 bus as the ECU. Using the CAN shield library, messages are received and passed
@@ -223,6 +223,11 @@ into the \lstinline{update()} function along with their ID. This updates the
 appropriate variables with their new values given in the message. The call to
 \lstinline{debugPrint()} uses the ID to determine which values received an
 update from the ECU and prints them to the serial monitor.
+
+\subsection{Mock ECU}
+The Mock ECU library sends out CAN messages with the same IDs as the PE3 ECU.
+The library exposes a Mock ECU object which takes a structure containing the values
+to send. 
 
 \section{CAN Interrupts}
 There are many cases on the Formula car where CAN messages need to be sent
@@ -235,6 +240,8 @@ update. Given below is some example code which emulates the up and down shift
 CAN functionality on the car. 
 
 \lstset{basicstyle=\ttfamily\scriptsize}
-% add CAN interrupt code here
+\lstinputlisting[language=C++, title=CAN Pin Interrupt]{../interrupts/interrupts.ino}
+
+The code maps buttons to each of the Arduino Uno's pin change interrupts. 
 
 \end{document}
