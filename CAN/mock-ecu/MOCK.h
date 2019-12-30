@@ -2,6 +2,7 @@
 #define MOCK_h
 
 #include "Arduino.h"
+#include "mcp_can.h"
 
 struct ECUData {
   int rpm;
@@ -27,7 +28,7 @@ struct ECUData {
 class MockECU {
 public:
   MockECU();
-  void sendData(ECUData d);
+  void sendData(ECUData d, MCP_CAN C);
 };
 
 #endif

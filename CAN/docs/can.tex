@@ -232,6 +232,7 @@ to send. The following demo sketch sends a set of static ECU values in a loop
 but the values could be easily populated dynamically by extending the code.
 
 \lstset{basicstyle=\ttfamily\scriptsize}
+\lstinputlisting[language=C++, title=Mock ECU Transmitter]{../mock-ecu/mock-ecu.ino}
 
 \section{CAN Interrupts}
 There are many cases on the Formula car where CAN messages need to be sent
@@ -241,7 +242,9 @@ higher priority, a low address should be used for interrupt based messages since
 they are only fired once for a certain event taking place and must be able to
 overtake lower priority messages that will simply be sent again such as an RPM
 update. Given below is some example code which emulates the up and down shift
-CAN functionality on the car. 
+CAN functionality on the car.\\
+\\
+\\
 
 \lstinputlisting[language=C++, title=CAN Pin Interrupt]{../interrupts/interrupts.ino}
 \lstset{basicstyle=\ttfamily}
