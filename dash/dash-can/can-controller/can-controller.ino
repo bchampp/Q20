@@ -27,7 +27,7 @@ void loop() {
       CAN.readMsgBuf(&len, buf);
       unsigned long id = CAN.getCanId();
       Serial.write(buf[0]);
-    }  
+    }
   } else {
       unsigned long sendingID = 0x00;
       CAN.sendMsgBuf(sendingID, 0, 8, message);

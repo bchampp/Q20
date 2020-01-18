@@ -13,19 +13,8 @@ MCP_CAN CAN(SPI_CS_PIN);
 // UART Config
 #define USerial Serial1
 
-unsigned long startMillis;  //some global variables available anywhere in the program
-unsigned long currentMillis;
-
-char buf[2];
 int rpm;
 int gear;
-int lastGear = 0;
-float tps;
-
-const byte numChars = 32;
-char receivedChars[numChars];
-char tempChars[numChars];
-boolean newData = false; 
 
 void setup() {
   // put your setup code here, to run once:
@@ -33,8 +22,9 @@ void setup() {
   USerial.begin(115200);
   
   GD.begin(CS_PIN);
-  startMillis = millis();  //initial start time
 }
+
+void receiveData() {}
 
 void loop() {
   unsigned char buf = 0;
