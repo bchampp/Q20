@@ -3,6 +3,8 @@
 
 #define SENDING 0
 
+#define BODY_LENGTH 4
+
 #define SPI_CS_PIN 9
 
 MCP_CAN CAN(SPI_CS_PIN);
@@ -49,8 +51,12 @@ void loop() {
 // TESTING
  Serial.write(msg[0]);
  Serial.write(msg[1]);
+ Serial.write(msg[2]);
+ Serial.write(msg[3]);
  Serial.write(msg[4]);
  Serial.write(msg[5]);
- delay(5000);
+ delay(2000);
  msg[0]++;
+ msg[2]++;
+ msg[3]++;
 }

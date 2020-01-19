@@ -85,7 +85,7 @@ void printCurrentMsg() {
 void loop() {
   recvData();
   printCurrentMsg();
-  
+  rpm = currentMsg[0];
   GD.ClearColorRGB(0,0,0);
   GD.Clear();
   GD.cmd_gauge(150, 136, 100, OPT_NOPOINTER, 8, 5, 0, 7500);
