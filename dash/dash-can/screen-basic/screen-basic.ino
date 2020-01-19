@@ -3,6 +3,11 @@
 #include <SPI.h>
 #include <GD23Z.h>
 
+// Length of UART messages in bytes
+// must always be an even number so that start and end markers
+// can be decoded properly
+#define BODY_LENGTH 8
+
 // CAN
 #include "mcp_can.h"
 
@@ -16,23 +21,66 @@ MCP_CAN CAN(SPI_CS_PIN);
 int rpm;
 int gear;
 
+unsigned char n = 0;
+unsigned char currentMsg[BODY_LENGTH];
+unsigned char data[BODY_LENGTH];
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   USerial.begin(115200);
   
   GD.begin(CS_PIN);
+  endian();
 }
 
-void receiveData() {}
+void arrCpy(unsigned char *src, unsigned char *dest) {
+  for (int i = 0; i < BODY_LENGTH; i++) {
+    dest[i] = src[i];  
+  }
+}
+
+void recvData() {
+  // assign start and end markers for each
+//  int startMarker = 20000;
+//  char *startBytes = (char *)&startMarker;
+  int endMarker = -20000;
+  char *endBytes = (char *)&endMarker;
+  
+  if (USerial.available() >= 2) {
+    char a = USerial.read();
+    char b = USerial.read();
+    if (a == endBytes[0] && b == endBytes[1]) {
+      // The message has ended
+      n = 0;
+      arrCpy(data, currentMsg);
+    } else {
+      data[n] = a;
+      data[n + 1] = b;
+      n += 2;
+    }
+  }
+}
+
+void endian() {
+  unsigned int i = 1;  
+  char *c = (char*)&i;  
+  if (*c)
+    Serial.println("Little Endian");  
+  else
+    Serial.println("Big Endian");     
+}
 
 void loop() {
-  unsigned char buf = 0;
-  if (USerial.available() > 0) {
-    buf = USerial.read();
-    Serial.println(buf);
-    rpm = buf;
-  }
+//  unsigned char buf = 0;
+//  if (USerial.available() > 0) {
+//    buf = USerial.read();
+//    Serial.println(buf);
+//    rpm = buf;
+//  }
+
+  recvData();
+  
   GD.ClearColorRGB(0,0,0);
   GD.Clear();
   GD.cmd_gauge(150, 136, 100, OPT_NOPOINTER, 8, 5, 0, 7500);
