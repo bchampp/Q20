@@ -6,7 +6,7 @@
 // Length of UART messages in bytes
 // must always be an even number so that start and end markers
 // can be decoded properly
-#define BODY_LENGTH 8
+#define BODY_LENGTH 4
 
 // CAN
 #include "mcp_can.h"
@@ -31,6 +31,7 @@ void setup() {
   USerial.begin(115200);
   
   GD.begin(CS_PIN);
+  delay(500);
   endian();
 }
 
@@ -48,6 +49,7 @@ void recvData() {
   char *endBytes = (char *)&endMarker;
   
   if (USerial.available() >= 2) {
+    Serial.println("RECV");
     char a = USerial.read();
     char b = USerial.read();
     if (a == endBytes[0] && b == endBytes[1]) {
@@ -71,6 +73,15 @@ void endian() {
     Serial.println("Big Endian");     
 }
 
+void printCurrentMsg() {
+  for (int i = 0; i < BODY_LENGTH; i++) {
+    Serial.print(currentMsg[i]);
+    Serial.print('\t');
+  }
+  Serial.println();
+  Serial.println("END");
+}
+
 void loop() {
 //  unsigned char buf = 0;
 //  if (USerial.available() > 0) {
@@ -80,6 +91,8 @@ void loop() {
 //  }
 
   recvData();
+  printCurrentMsg();
+  
   
   GD.ClearColorRGB(0,0,0);
   GD.Clear();
