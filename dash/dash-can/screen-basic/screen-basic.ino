@@ -83,16 +83,8 @@ void printCurrentMsg() {
 }
 
 void loop() {
-//  unsigned char buf = 0;
-//  if (USerial.available() > 0) {
-//    buf = USerial.read();
-//    Serial.println(buf);
-//    rpm = buf;
-//  }
-
   recvData();
   printCurrentMsg();
-  
   
   GD.ClearColorRGB(0,0,0);
   GD.Clear();

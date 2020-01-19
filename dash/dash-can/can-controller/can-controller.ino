@@ -52,4 +52,5 @@ void loop() {
  Serial.write(msg[4]);
  Serial.write(msg[5]);
  delay(5000);
+ msg[0]++;
 }
