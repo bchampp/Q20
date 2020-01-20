@@ -127,11 +127,15 @@ or receive CAN messages. The diagram below is an example CAN network with three 
   \includegraphics[width=\textwidth]{CAN-network-diagram}
 \end{center}
 
+\subsection{Baud Rate Selection}
+Include graph of stable baud rates over bus lengths and add the baud rate
+currently in use in the CAN on the car section.
+
 \section{CAN on the Q19 Car}
 In the case of the Formula car, the ECU has a terminating resistor. This is also the case for
 the end of the car's CAN line where the CAN to USB dongle is found. Thus,
-additional CAN peripheral should omit the terminating resistor in order to ensure thatthe bus keeps
-functioning properly.
+additional CAN peripheral should omit the terminating resistor in order to
+ensure that the bus keeps functioning properly.
 
 \subsection{Testbench Code}
 The Arduino code for a CAN test bench is provided below. The Arduino INO file can be
@@ -209,7 +213,7 @@ QFSAE is developing a library to read these ECU message built atop the
 CAN shield library. Currently, the library can read all the messages on 
 the datasheet provided above. The library exposes an \lstinline{ECU} class
 which has global variables containing each of the values transmitted by
-the ECU in CAN message IDs PE1 - PE7. The values are kept up to date with the
+the ECU in CAN message IDs PE1 - PE16. The values are kept up to date with the
 latest ECU message transmission by passing the data in each CAN message from the
 ECU into the object's \lstinline{update()} method. The class definition for the
 ECU object is given below followed by the code for an ECU testbench.\\
@@ -233,6 +237,9 @@ but the values could be easily populated dynamically by extending the code.
 
 \lstset{basicstyle=\ttfamily\scriptsize}
 \lstinputlisting[language=C++, title=Mock ECU Transmitter]{../mock-ecu/mock-ecu.ino}
+\\
+Note: This library is on hold since the dyno is currently set up making it
+simple to obtain values from the real ECU.
 
 \section{CAN Interrupts}
 There are many cases on the Formula car where CAN messages need to be sent
