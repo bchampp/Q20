@@ -26,5 +26,14 @@ Specify stub methods here.
 Read method will return some type of `DashData` structure with fields for each
 piece of data the screen must show.  
 
+The `DashData` structure will contain the following fields:
+- RPM (int)
+- TPS (int)
+- Pressure unit (unsigned char)
+- Fuel Pressure (int)
+- Battery Voltage (int)
+- Oil Pressure (int)
+- Engine Temp (int) 
+
 Write method will take any even number of bytes and add the unique message end
 marker which contains a value that cannot be transmitted by the ECU.
