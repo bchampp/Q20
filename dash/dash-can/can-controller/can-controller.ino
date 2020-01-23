@@ -52,8 +52,10 @@ void loop() {
       unsigned long id = CAN.getCanId();
       ECU.update(id, buf, len);
       //ECU.debugPrint(id);
+      // abstract this away in an ECU lib func which populates the buffer
       msg[0] = (unsigned char) ((int)ECU.tps & 0x00FF);
-      msg[1] = (unsigned char) (((int)ECU.tps & 0xFF00) >> 8);
+//      msg[1] = (unsigned char) (((int)ECU.tps & 0xFF00) >> 8);
+      msg[1] = ((int)ECU.batVoltage) & 0x00FF;
     }
   }
   writeMsg();

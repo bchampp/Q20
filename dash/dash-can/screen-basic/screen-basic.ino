@@ -146,7 +146,7 @@ void driveScreen()
   GD.cmd_text(434, 108, 28, OPT_CENTERX, "OPres");
   GD.cmd_number(434, 128, 31, OPT_CENTERX, 70);
   GD.cmd_text(434, 192, 28, OPT_CENTERX, "BVolt");
-  GD.cmd_text(434, 212, 31, OPT_CENTERX, "13.2");
+  GD.cmd_number(434, 212, 31, OPT_CENTERX, currentMsg[1]);
   GD.cmd_text(273, 30, 28, OPT_CENTERX, "PDM");
   GD.cmd_text(273, 48, 31, OPT_CENTERX, "OK");
   GD.cmd_text(434, 30, 28, OPT_CENTERX, "FAN");
