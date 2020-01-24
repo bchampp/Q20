@@ -1,6 +1,52 @@
 #include <SPI.h>
 #include <GD23Z.h>
 
+// UART Stuff
+#define BODY_LENGTH 4
+#define USerial Serial1
+
+unsigned char n = 0;
+unsigned char currentMsg[BODY_LENGTH];
+unsigned char data[BODY_LENGTH];
+
+void arrCpy(unsigned char *src, unsigned char *dest) {
+  for (int i = 0; i < BODY_LENGTH; i++) {
+    dest[i] = src[i];  
+  }
+}
+
+void recvData() {
+  // assign start and end markers for each
+//  int startMarker = 20000;
+//  char *startBytes = (char *)&startMarker;
+  int endMarker = -20000;
+  char *endBytes = (char *)&endMarker;
+  
+  if (USerial.available() >= 2) {
+    Serial.println("RECV");
+    char a = USerial.read();
+    char b = USerial.read();
+    if (a == endBytes[0] && b == endBytes[1]) {
+      // The message has ended
+      n = 0;
+      arrCpy(data, currentMsg);
+    } else {
+      data[n] = a;
+      data[n + 1] = b;
+      n += 2;
+    }
+  }
+}
+
+void printCurrentMsg() {
+  for (int i = 0; i < BODY_LENGTH; i++) {
+    Serial.print(currentMsg[i]);
+    Serial.print('\t');
+  }
+  Serial.println();
+  Serial.println("END");
+}
+
 void setup() {
   // put your setup code here, to run once:
   GD.begin(0);
@@ -9,7 +55,7 @@ void setup() {
 
 void driveScreen()
 {
-  int pot = analogRead(A4)-924;
+  int pot = currentMsg[0];//analogRead(A4)-924;
   // put your main code here, to run repeatedly:
   GD.cmd_gauge(117, 137, 130, OPT_FLAT | OPT_NOBACK | OPT_NOPOINTER, 4, 8, 0, 100);
   GD.ColorRGB(255,0,0);
@@ -134,11 +180,13 @@ void etc_Screen()
 }
 
 void loop() {
+  recvData();
+  printCurrentMsg();
   GD.ClearColorRGB(0,0,0);
   GD.Clear();
   driveScreen();
   //etc_Screen();
-  Serial.println(analogRead(A4));
+ //Serial.println(analogRead(A4));
 //  for(int i =0; i>0; i++)
 //  {
 //    
