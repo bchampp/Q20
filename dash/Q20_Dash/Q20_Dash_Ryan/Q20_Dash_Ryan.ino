@@ -1,65 +1,19 @@
-#include <SPI.h>
 #include <GD23Z.h>
-
-// UART Stuff
-#define BODY_LENGTH 4
-#define USerial Serial1
-
-unsigned char n = 0;
-unsigned char currentMsg[BODY_LENGTH];
-unsigned char data[BODY_LENGTH];
-
-void arrCpy(unsigned char *src, unsigned char *dest) {
-  for (int i = 0; i < BODY_LENGTH; i++) {
-    dest[i] = src[i];  
-  }
-}
-
-void recvData() {
-  // assign start and end markers for each
-//  int startMarker = 20000;
-//  char *startBytes = (char *)&startMarker;
-  int endMarker = -20000;
-  char *endBytes = (char *)&endMarker;
-  
-  if (USerial.available() >= 2) {
-    Serial.println("RECV");
-    char a = USerial.read();
-    char b = USerial.read();
-    if (a == endBytes[0] && b == endBytes[1]) {
-      // The message has ended
-      n = 0;
-      arrCpy(data, currentMsg);
-    } else {
-      data[n] = a;
-      data[n + 1] = b;
-      n += 2;
-    }
-  }
-}
-
-void printCurrentMsg() {
-  for (int i = 0; i < BODY_LENGTH; i++) {
-    Serial.print(currentMsg[i]);
-    Serial.print('\t');
-  }
-  Serial.println();
-  Serial.println("END");
-}
+#include <SPI.h>
 
 void setup() {
   // put your setup code here, to run once:
   GD.begin(0);
-  
 }
 
-void driveScreen()
-{
-  int pot = currentMsg[0];//analogRead(A4)-924;
+void driveScreen() {
+  int pot = analogRead(A4) - 924;
   // put your main code here, to run repeatedly:
-  GD.cmd_gauge(117, 137, 130, OPT_FLAT | OPT_NOBACK | OPT_NOPOINTER, 4, 8, 0, 100);
-  GD.ColorRGB(255,0,0);
-  GD.cmd_gauge(117, 137, 130, OPT_FLAT | OPT_NOBACK | OPT_NOTICKS, 4, 8, pot, 110);
+  GD.cmd_gauge(117, 137, 130, OPT_FLAT | OPT_NOBACK | OPT_NOPOINTER, 4, 8, 0,
+               100);
+  GD.ColorRGB(255, 0, 0);
+  GD.cmd_gauge(117, 137, 130, OPT_FLAT | OPT_NOBACK | OPT_NOTICKS, 4, 8, pot,
+               110);
   GD.Begin(LINES);
   GD.Vertex2ii(209, 155, 0, 0);
   GD.Vertex2ii(218, 157, 0, 0);
@@ -83,32 +37,31 @@ void driveScreen()
   GD.Vertex2ii(0, 20, 0, 0);
   GD.Vertex2ii(480, 20, 0, 0);
   GD.End();
-  GD.ColorRGB(0,190,0);
+  GD.ColorRGB(0, 190, 0);
   GD.Begin(RECTS);
-  //PDM
+  // PDM
   GD.Vertex2ii(232, 31, 0, 0);
   GD.Vertex2ii(315, 96, 0, 0);
-  //FAN
+  // FAN
   GD.Vertex2ii(392, 31, 0, 0);
   GD.Vertex2ii(476, 96, 0, 0);
-  //ENGINE TEMP
+  // ENGINE TEMP
   GD.Vertex2ii(232, 108, 0, 0);
   GD.Vertex2ii(315, 173, 0, 0);
-  //OIL PRESSURE
+  // OIL PRESSURE
   GD.Vertex2ii(393, 108, 0, 0);
   GD.Vertex2ii(476, 173, 0, 0);
-  //OIL TEMPERATURE
+  // OIL TEMPERATURE
   GD.Vertex2ii(232, 192, 0, 0);
   GD.Vertex2ii(315, 258, 0, 0);
-  //BATTERY VOLTAGE
+  // BATTERY VOLTAGE
   GD.Vertex2ii(393, 192, 0, 0);
   GD.Vertex2ii(476, 258, 0, 0);
   GD.End();
 
-
   GD.ColorRGB(0, 0, 0);
   GD.cmd_text(7, 0, 27, 0, "D");
-  GD.ColorRGB(255,255,255);
+  GD.ColorRGB(255, 255, 255);
   GD.cmd_text(273, 108, 28, OPT_CENTERX, "ETemp");
   GD.cmd_number(273, 127, 31, OPT_CENTERX, 115);
   GD.cmd_text(273, 192, 28, OPT_CENTERX, "OTemp");
@@ -124,41 +77,40 @@ void driveScreen()
   GD.cmd_number(120, 204, 31, OPT_CENTERX, pot);
 }
 
-void etc_Screen()
-{
+void etc_Screen() {
   GD.ColorRGB(75, 75, 75);
   GD.Begin(EDGE_STRIP_A);
   GD.Vertex2ii(0, 20, 0, 0);
   GD.Vertex2ii(480, 20, 0, 0);
   GD.End();
-  //makes the top gray strip
+  // makes the top gray strip
   GD.ColorRGB(0, 0, 0);
   GD.cmd_text(7, 0, 27, 0, "ETC");
-  //identifies the screen as being the ETC display info screen
-  GD.ColorRGB(0,190,0);
-  GD.ColorRGB(0,190,0);
+  // identifies the screen as being the ETC display info screen
+  GD.ColorRGB(0, 190, 0);
+  GD.ColorRGB(0, 190, 0);
   GD.Begin(RECTS);
-  //APPS
+  // APPS
   GD.Vertex2ii(59, 41, 0, 0);
   GD.Vertex2ii(142, 130, 0, 0);
-  //BRAKE PRESSURE
+  // BRAKE PRESSURE
   GD.Vertex2ii(199, 41, 0, 0);
   GD.Vertex2ii(282, 130, 0, 0);
-  //BRAKE SPEED PLAUSIBILITY DEVICE
+  // BRAKE SPEED PLAUSIBILITY DEVICE
   GD.Vertex2ii(339, 41, 0, 0);
   GD.Vertex2ii(422, 130, 0, 0);
-  //RPM
+  // RPM
   GD.Vertex2ii(59, 161, 0, 0);
   GD.Vertex2ii(142, 250, 0, 0);
-  //ENGINE TEMPERATURE
+  // ENGINE TEMPERATURE
   GD.Vertex2ii(199, 161, 0, 0);
   GD.Vertex2ii(282, 250, 0, 0);
-  //ERROR
+  // ERROR
   GD.Vertex2ii(339, 161, 0, 0);
   GD.Vertex2ii(422, 250, 0, 0);
   GD.End();
 
-  GD.ColorRGB(255,255,255);
+  GD.ColorRGB(255, 255, 255);
   GD.cmd_text(100, 40, 26, OPT_CENTERX, "Accelerator");
   GD.cmd_text(100, 55, 27, OPT_CENTERX, "Pedal");
   GD.cmd_text(100, 70, 27, OPT_CENTERX, "Position");
@@ -169,7 +121,7 @@ void etc_Screen()
   GD.cmd_text(380, 40, 27, OPT_CENTERX, "Brake");
   GD.cmd_text(380, 55, 27, OPT_CENTERX, "Speed");
   GD.cmd_text(380, 70, 27, OPT_CENTERX, "Plausibility");
-  GD.cmd_number(380, 85, 31,  OPT_CENTERX, 0);
+  GD.cmd_number(380, 85, 31, OPT_CENTERX, 0);
   GD.cmd_text(100, 170, 28, OPT_CENTERX, "RPM");
   GD.cmd_number(100, 200, 31, OPT_CENTERX, 0);
   GD.cmd_text(240, 160, 28, OPT_CENTERX, "Engine");
@@ -180,17 +132,15 @@ void etc_Screen()
 }
 
 void loop() {
-  recvData();
-  printCurrentMsg();
-  GD.ClearColorRGB(0,0,0);
+  GD.ClearColorRGB(0, 0, 0);
   GD.Clear();
   driveScreen();
-  //etc_Screen();
- //Serial.println(analogRead(A4));
-//  for(int i =0; i>0; i++)
-//  {
-//    
-//  }
+  // etc_Screen();
+
+  Serial.println(analogRead(A4));
+  //  for(int i =0; i>0; i++)
+  //  {
+  //
+  //  }
   GD.swap();
-  
 }
